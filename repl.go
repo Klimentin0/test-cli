@@ -61,5 +61,10 @@ func getCommands() map[string]cliCommand {
 			description: "help message",
 			callback:    helpPrompt,
 		},
+		"list": {
+			name:        "list",
+			description: "crypto list",
+			callback:    listPrompt,
+		},
 	}
 }
