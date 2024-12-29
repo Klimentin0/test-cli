@@ -20,8 +20,25 @@ func startRepl() {
 
 		commandName := strSlice[0]
 
-		fmt.Printf("Your command was: %s\n", commandName)
+		command, ok := getCommands()[commandName]
+		if ok {
+			err := command.callback()
+			if err != nil {
+				fmt.Println(err)
+			}
+			continue
+		} else {
+			fmt.Println("Unknown command")
+			continue
+		}
+
 	}
+}
+
+type cliCommand struct {
+	callback    func() error
+	name        string
+	description string
 }
 
 func cleanInput(text string) []string {
@@ -30,4 +47,19 @@ func cleanInput(text string) []string {
 		strSlice[i] = strings.ToLower(word)
 	}
 	return strSlice
+}
+
+func getCommands() map[string]cliCommand {
+	return map[string]cliCommand{
+		"exit": {
+			name:        "exit",
+			description: "Exit the repl",
+			callback:    quitPrompt,
+		},
+		"help": {
+			name:        "help",
+			description: "help message",
+			callback:    helpPrompt,
+		},
+	}
 }
