@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"sort"
 )
 
 func listPrompt() error {
@@ -25,11 +26,20 @@ func listPrompt() error {
 		fmt.Printf("Error unmarshalling JSON: %v", err)
 	}
 
-	for crypto, values := range cryptoData {
+	var sortCrypto []string
+	for item := range cryptoData {
+		sortCrypto = append(sortCrypto, item)
+	}
+
+	sort.Strings(sortCrypto)
+
+	for _, crypto := range sortCrypto {
 		fmt.Printf("%s Prices:\n", crypto)
+		values := cryptoData[crypto]
 		for currency, price := range values {
 			fmt.Printf(" %s: %.2f\n", currency, price)
 		}
+		fmt.Println()
 	}
 
 	return nil
